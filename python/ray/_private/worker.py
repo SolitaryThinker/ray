@@ -48,6 +48,7 @@ import ray._private.serialization as serialization
 import ray._private.services as services
 import ray._private.state
 import ray._private.worker
+from ray.actor import ActorClass
 
 # Ray modules
 import ray.actor
@@ -3338,7 +3339,6 @@ class RemoteDecorator(Protocol):
 def remote(__t: Type[T]) -> ActorClass[T]:
     ...
 
-
 @overload
 def remote(__function: Callable[[], R]) -> RemoteFunctionNoArgs[R]:
     ...
@@ -3658,3 +3658,4 @@ def remote(
         return _make_remote(args[0], {})
     assert len(args) == 0 and len(kwargs) > 0, ray_option_utils.remote_args_error_string
     return functools.partial(_make_remote, options=kwargs)
+

@@ -16,7 +16,7 @@ from typing import (
 import ray._private.ray_constants as ray_constants
 import ray._private.signature as signature
 import ray._raylet
-from ray import ActorClassID, Language, cross_language
+from ray import ActorClassID, Language, cross_language, ObjectRef
 from ray._private import ray_option_utils
 from ray._private.async_compat import has_async_methods
 from ray._private.auto_init_hook import wrap_auto_init
@@ -53,9 +53,470 @@ from ray.util.tracing.tracing_helper import (
 from ray._private.custom_types import (
     TensorTransportEnum,
 )
+from typing_extensions import ParamSpec
+from . import io
+from typing_extensions import Concatenate
+from typing_extensions import Literal
+from typing_extensions import TypedDict
+from typing_extensions import Unpack
+
+from .callable import ClassMethodBindCallable
+from .callable import RemoteCallable
 
 if TYPE_CHECKING:
     pass
+    # from collections.abc import AsyncGenerator
+    # from collections.abc import Awaitable
+    # from collections.abc import Generator
+    # from typing import Callable
+
+    # from ray.actor import ActorHandle
+
+_Ret = TypeVar("_Ret")
+_YieldItem = TypeVar("_YieldItem")
+_RemoteRet = TypeVar("_RemoteRet", bound=io.Out)
+_ClassT_co = TypeVar("_ClassT_co", covariant=True)
+_P = ParamSpec("_P")
+_R0 = TypeVar("_R0")
+_R1 = TypeVar("_R1")
+_R2 = TypeVar("_R2")
+_R3 = TypeVar("_R3")
+_R4 = TypeVar("_R4")
+_R5 = TypeVar("_R5")
+_R6 = TypeVar("_R6")
+_R7 = TypeVar("_R7")
+_R8 = TypeVar("_R8")
+_R9 = TypeVar("_R9")
+
+# if TYPE_CHECKING:
+
+class MethodOptions(TypedDict, total=False):
+    name: str
+    concurrency_group: str
+    max_task_retries: int
+    retry_exceptions: Union[bool, List[Type[Exception]]]
+    enable_task_events: bool
+    _generator_backpressure_num_objects: Any
+
+class Method(Generic[_P, _Ret]):
+    remote: RemoteCallable[Callable[_P, _Ret], io.Out[ObjectRef[_Ret]]]
+    bind: ClassMethodBindCallable[Callable[_P, _Ret], io.Out[ObjectRef[_Ret]]]
+
+    @overload
+    def options(
+        self,
+        *,
+        unpack: Literal[False] = False,
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[_P, _Ret, io.Out[ObjectRef[_Ret]]]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[_P, _Ret, io.Out[tuple[ObjectRef[_R0]]]]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[_P, _Ret, io.Out[tuple[ObjectRef[_R0], ObjectRef[_R1]]]]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P, _Ret, io.Out[tuple[ObjectRef[_R0], ObjectRef[_R1], ObjectRef[_R2]]]
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3, _R4]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6, _R7]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+                ObjectRef[_R7],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6, _R7, _R8]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+                ObjectRef[_R7],
+                ObjectRef[_R8],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: Method[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6, _R7, _R8, _R9]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        _Ret,
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+                ObjectRef[_R7],
+                ObjectRef[_R8],
+                ObjectRef[_R9],
+            ]
+        ],
+    ]: ...
+
+    def options(
+        self, *, unpack: bool = False, **options: Unpack[MethodOptions]
+    ) -> MethodWrapper: ...
+
+    def __call__(self, *args: _P.args, **kwds: _P.kwargs) -> _Ret: ...
+
+class AsyncMethod(Generic[_P, _Ret]):
+    remote: RemoteCallable[Callable[_P, Awaitable[_Ret]], io.Out[ObjectRef[_Ret]]]
+    bind: ClassMethodBindCallable[
+        Callable[_P, Awaitable[_Ret]], io.Out[ObjectRef[_Ret]]
+    ]
+
+    @overload
+    def options(
+        self, *, unpack: Literal[False] = False, **options: Unpack[MethodOptions]
+    ) -> MethodWrapper[_P, Awaitable[_Ret], io.Out[ObjectRef[_Ret]]]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[_P, Awaitable[_Ret], io.Out[tuple[ObjectRef[_R0]]]]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P, Awaitable[_Ret], io.Out[tuple[ObjectRef[_R0], ObjectRef[_R1]]]
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[tuple[ObjectRef[_R0], ObjectRef[_R1], ObjectRef[_R2]]],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2, _R3]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2, _R3, _R4]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6, _R7]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+                ObjectRef[_R7],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[_P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6, _R7, _R8]],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+                ObjectRef[_R7],
+                ObjectRef[_R8],
+            ]
+        ],
+    ]: ...
+
+    @overload
+    def options(
+        self: AsyncMethod[
+            _P, tuple[_R0, _R1, _R2, _R3, _R4, _R5, _R6, _R7, _R8, _R9]
+        ],
+        *,
+        unpack: Literal[True],
+        **options: Unpack[MethodOptions],
+    ) -> MethodWrapper[
+        _P,
+        Awaitable[_Ret],
+        io.Out[
+            tuple[
+                ObjectRef[_R0],
+                ObjectRef[_R1],
+                ObjectRef[_R2],
+                ObjectRef[_R3],
+                ObjectRef[_R4],
+                ObjectRef[_R5],
+                ObjectRef[_R6],
+                ObjectRef[_R7],
+                ObjectRef[_R8],
+                ObjectRef[_R9],
+            ]
+        ],
+    ]: ...
+
+    def options(
+        self, *, unpack: bool = False, **options: Unpack[MethodOptions]
+    ) -> MethodWrapper: ...
+
+    def __call__(self, *args: _P.args, **kwds: _P.kwargs) -> Awaitable[_Ret]: ...
+
+class MethodWrapper(Generic[_P, _Ret, _RemoteRet]):
+    remote: RemoteCallable[Callable[_P, _Ret], _RemoteRet]
+
+    def __call__(self, *args: _P.args, **kwds: _P.kwargs) -> _Ret: ...
+
+class MethodDecorator:
+    @overload
+    def __call__(
+        self, __method: Callable[Concatenate[Any, _P], Awaitable[_Ret]]
+    ) -> AsyncMethod[_P, _Ret]: ...
+
+    @overload
+    def __call__(
+        self, __method: Callable[Concatenate[Any, _P], _Ret]
+    ) -> Method[_P, _Ret]: ...
+
+    def __call__(self, __method) -> Any: ...
+
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +528,21 @@ T = TypeVar("T")
 
 # return type of ActorClass[T].remote()
 ActorProxy = Union["ActorHandle[T]", type[T]]
+
+@overload
+def method(**options: Unpack[MethodOptions]) -> MethodDecorator: ...
+
+
+@overload
+def method(
+    __method: Callable[Concatenate[Any, _P], Awaitable[_Ret]],
+) -> AsyncMethod[_P, _Ret]: ...
+
+
+@overload
+def method(
+    __method: Callable[Concatenate[Any, _P], _Ret],
+) -> Method[_P, _Ret]: ...
 
 
 @PublicAPI
@@ -1757,6 +2233,7 @@ class ActorHandle(Generic[T]):
         return object_refs
 
     def __getattr__(self, item: str) -> Any:
+    # def __getattr__(self, item: str) -> type[T]:
         """Handle dynamic attribute access for actor methods.
 
         This method is called when accessing attributes that don't exist as direct
