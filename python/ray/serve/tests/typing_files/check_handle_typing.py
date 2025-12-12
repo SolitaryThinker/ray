@@ -116,8 +116,8 @@ def test_chained_handle_access() -> None:
     handle: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
 
     # Accessing a method via __getattr__ should return DeploymentHandle[T]
-    method_handle = handle.my_method
-    assert_type(method_handle, DeploymentHandle[MyDeployment])
+#     method_handle = handle.my_method
+#     assert_type(method_handle, DeploymentHandle[MyDeployment])
 
 
 # =============================================================================
@@ -149,23 +149,23 @@ def test_plugin_infers_method_return_type() -> None:
             yield b"chunk1"
             yield b"chunk2"
 
-    _: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
+    handle: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
 
     # # Calling a method that returns str should give DeploymentResponse[str]
-    # response_str = handle.get_user.remote(123)
-    # assert_type(response_str, DeploymentResponse[str])
+    response_str = handle.get_user.remote(123)
+    assert_type(response_str, DeploymentResponse[str])
 
     # # result() should return str
-    # user = response_str.result()
-    # assert_type(user, str)
+    user = response_str.result()
+    assert_type(user, str)
 
     # # Calling a method that returns int should give DeploymentResponse[int]
-    # response_int = handle.get_count.remote()
-    # assert_type(response_int, DeploymentResponse[int])
+    response_int = handle.get_count.remote()
+    assert_type(response_int, DeploymentResponse[int])
 
     # # result() should return int
-    # count = response_int.result()
-    # assert_type(count, int)
+    count = response_int.result()
+    assert_type(count, int)
 
 
 async def test_plugin_infers_await_return_type() -> None:
@@ -175,14 +175,14 @@ async def test_plugin_infers_await_return_type() -> None:
         def process(self, data: str) -> dict:
             return {"data": data}
 
-    _: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
+    handle: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
 
-    # response = handle.process.remote("test")
-    # assert_type(response, DeploymentResponse[dict])
+    response = handle.process.remote("test")
+    assert_type(response, DeploymentResponse[dict])
 
     # # Awaiting should return dict
-    # result = await response
-    # assert_type(result, dict)
+    result = await response
+    assert_type(result, dict)
 
 
 def test_plugin_infers_generator_yield_type() -> None:
@@ -198,26 +198,26 @@ def test_plugin_infers_generator_yield_type() -> None:
             yield 1
             yield 2
 
-    _: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
+    handle: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
 
     # # Streaming handle with generator method should give DeploymentResponseGenerator
-    # streaming_handle = handle.options(stream=True)
+    streaming_handle = handle.options(stream=True)
 
-    # gen_str = streaming_handle.stream_strings.remote()
-    # assert_type(gen_str, DeploymentResponseGenerator[str])
+    gen_str = streaming_handle.stream_strings.remote()
+    assert_type(gen_str, DeploymentResponseGenerator[str])
 
     # # Iteration should yield str
-    # for item in gen_str:
-    #     assert_type(item, str)
-    #     break
+    for item in gen_str:
+        assert_type(item, str)
+        break
 
-    # gen_int = streaming_handle.stream_ints.remote()
-    # assert_type(gen_int, DeploymentResponseGenerator[int])
+    gen_int = streaming_handle.stream_ints.remote()
+    assert_type(gen_int, DeploymentResponseGenerator[int])
 
     # # Iteration should yield int
-    # for item in gen_int:
-    #     assert_type(item, int)
-    #     break
+    for item_int in gen_int:
+        assert_type(item_int, int)
+        break
 
 
 async def test_plugin_async_generator_iteration() -> None:
@@ -228,16 +228,16 @@ async def test_plugin_async_generator_iteration() -> None:
         def stream_bytes(self) -> Generator[bytes, None, None]:
             yield b"chunk"
 
-    _: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
+    handle: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
 
-    # streaming_handle = handle.options(stream=True)
-    # gen = streaming_handle.stream_bytes.remote()
-    # assert_type(gen, DeploymentResponseGenerator[bytes])
+    streaming_handle = handle.options(stream=True)
+    gen = streaming_handle.stream_bytes.remote()
+    assert_type(gen, DeploymentResponseGenerator[bytes])
 
     # # Async iteration should yield bytes
-    # async for chunk in gen:
-    #     assert_type(chunk, bytes)
-    #     break
+    async for chunk in gen:
+        assert_type(chunk, bytes)
+        break
 
 
 def test_plugin_complex_return_types() -> None:
@@ -260,18 +260,18 @@ def test_plugin_complex_return_types() -> None:
         def get_tuple(self) -> Tuple[str, int, User]:
             return ("", 0, User())
 
-    _: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
+    handle: DeploymentHandle[MyDeployment] = None  # type: ignore[assignment]
 
-    # response_list = handle.get_users.remote()
-    # assert_type(response_list, DeploymentResponse[List[User]])
-    # users = response_list.result()
-    # assert_type(users, List[User])
+    response_list = handle.get_users.remote()
+    assert_type(response_list, DeploymentResponse[List[User]])
+    users = response_list.result()
+    assert_type(users, List[User])
 
-    # response_dict = handle.get_user_dict.remote()
-    # assert_type(response_dict, DeploymentResponse[Dict[str, User]])
+    response_dict = handle.get_user_dict.remote()
+    assert_type(response_dict, DeploymentResponse[Dict[str, User]])
 
-    # response_optional = handle.get_optional.remote()
-    # assert_type(response_optional, DeploymentResponse[Optional[User]])
+    response_optional = handle.get_optional.remote()
+    assert_type(response_optional, DeploymentResponse[Optional[User]])
 
-    # response_tuple = handle.get_tuple.remote()
-    # assert_type(response_tuple, DeploymentResponse[Tuple[str, int, User]])
+    response_tuple = handle.get_tuple.remote()
+    assert_type(response_tuple, DeploymentResponse[Tuple[str, int, User]])

@@ -15,6 +15,7 @@ from typing import (
     TypeVar,
     Union,
     cast,
+    TYPE_CHECKING,
 )
 
 import ray
@@ -850,3 +851,13 @@ class DeploymentHandle(_DeploymentHandleBase[T]):
                 request_metadata,
                 _is_router_running_in_separate_loop=self._is_router_running_in_separate_loop(),
             )
+
+class _DeploymentMethod(Generic[R]):
+    def remote(self, *args: Any, **kwargs: Any) -> "DeploymentResponse[R]":
+        raise NotImplementedError
+
+class _DeploymentGeneratorMethod(Generic[R]):
+    def remote(
+        self, *args: Any, **kwargs: Any
+    ) -> "DeploymentResponseGenerator[R]":
+        raise NotImplementedError
